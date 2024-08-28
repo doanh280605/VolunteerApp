@@ -32,9 +32,11 @@ export const useTextSearchQuery = (searchQuery?: string) => {
                     console.log(error)
                 }
             })()
+        } else {
+            setResponseData(undefined);
         }
     }, [
-        searchQuery, 
+        searchQuery,    
         userLocation?.coords.latitude,
         userLocation?.coords.longitude
     ]);

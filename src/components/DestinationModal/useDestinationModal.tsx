@@ -3,6 +3,7 @@ import { useDebounce } from "use-debounce";
 import type { LatLng } from "react-native-maps";
 import { useTextSearchQuery } from "models/places/useTextSearchQuery";
 import type {TextSearchItem} from 'models/places/types/TextSearchItem';
+import { useSearchHistory } from "hooks/useSearchHistory";
 
 type UseDestinationModal = {
     onPlaceItemPress: (coords: LatLng) => void;
@@ -31,22 +32,30 @@ export const useDestinationModal = ({
             latitude: item.geometry.location.lat,
             longitude: item.geometry.location.lng,
           });
-          // addItemToSearchHistory(item);
+            addItemToSearchHistory(item);
         };
     };
+    
+    const {searchHistoryItems, addItemToSearchHistory} = useSearchHistory('places', 'place_id');
 
     const handleRoundButtonPress = () => {
         closeModal();
+        setDestinationInputValue('')
     };
+
+    const handleModalDismiss = () => {
+        setDestinationInputValue('')
+    }
     return {
         models: { 
             destinationInputValue, 
-            textSearchQueryResponseData: responseData?.results || []
+            textSearchQueryResponseData: responseData?.results || searchHistoryItems
         },
         operations: { 
             handleDestinationInputTextChange,
             handlePlaceItemPress,
-            handleRoundButtonPress
+            handleRoundButtonPress,
+            handleModalDismiss
         }
     }
 }

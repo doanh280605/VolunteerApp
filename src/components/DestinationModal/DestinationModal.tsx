@@ -44,7 +44,7 @@ export const DestinationModal = ({
         )
     }
     return (
-        <Modal onRequestClose={closeModal} visible={visible} animationType='fade'>
+        <Modal onDismiss={operations.handleModalDismiss} onRequestClose={closeModal} visible={visible} animationType='fade'>
             <StyledFlatList 
                 stickyHeaderIndices={[0]} // make the header stick at the same place
                 keyboardShouldPersistTaps="always"

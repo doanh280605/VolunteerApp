@@ -18,8 +18,21 @@ module.exports = {
     [
       '@babel/plugin-transform-private-methods',
       {
-        "loose": true // You can set this to false if you prefer
+        loose: true, // You can set this to false if you prefer
       },
     ],
+  ],
+  overrides: [
+    {
+      test: (filename) => !filename.includes('node_modules/react-native-maps'),
+      plugins: [
+        [
+          '@babel/plugin-transform-private-methods',
+          {
+            loose: true,
+          },
+        ],
+      ],
+    },
   ],
 };

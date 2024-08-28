@@ -8,9 +8,12 @@ import { DestinationModal } from '../../components/DestinationModal';
 import { Marker } from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
 import { GOOGLE_MAPS_API_KEY } from '@env';
+import { useTheme } from '@emotion/react';
+import { scale } from 'react-native-size-matters';
 
 export const MapScreen = () => {
     const {models, operations} = useMapScreen();
+    const theme = useTheme()
 
     const renderMapMarkers = () => {
         return models.mapMarkers.map((item, index) => {
@@ -25,11 +28,25 @@ export const MapScreen = () => {
                 showsUserLocation
                 onUserLocationChange={operations.handleUserLocationChange}
                 showsMyLocationButton={false}
-                showsCompass={false}>
+                showsCompass={false}
+            >
                 {renderMapMarkers()}
+                <MapViewDirections 
+                    origin={models.mapMarkers[0]}
+                    destination={models.mapMarkers[1]}
+                    apikey={GOOGLE_MAPS_API_KEY}
+                    strokeColor={theme.colors.screens.mapScreen.directionsStroke}
+                    strokeWidth={scale(5)}
+                    onReady={operations.handleMapDirectionReady}
+                />
             </StyledMapView>
-            <MapSearchBar onPress={operations.handleMapSearchBarPress}/>
-            <RoundButton icon="menu-outline"/>
+            {models.isRouteVisible || models.modalVisible ? null : (
+                <MapSearchBar onPress={operations.handleMapSearchBarPress}/>
+            )}
+            <RoundButton 
+                onPress={operations.handleRoundButtonPress}
+                icon={models.isRouteVisible ? 'arrow-back-outline' : 'menu-outline'}
+            />
             <DestinationModal 
                 visible={models.modalVisible} 
                 closeModal={operations.closeDestinationModal} 
